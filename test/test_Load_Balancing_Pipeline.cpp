@@ -15,7 +15,7 @@
 
 #include "ELWD_Pipeline.h"
 #include "ELWD_Starting_Stage_I.h"
-#include "ELWD_Starting_Stage_I.h"
+#include "ELWD_Middle_Stage_I.h"
 #include "ELWD_Ending_Stage_I.h"
 #include "ELWD_Load_Balanced_Thread_Pool.h"
 
@@ -23,7 +23,7 @@
 
 // This is a super simple catcher
 struct producer : public ELWD_Starting_Stage_I<int, int>{
-  producer(ELWD_Safe_Queue<int>* queue) : ELWD_Output_Stage_I(0,queue){}
+  producer(ELWD_Safe_Queue<int>* queue) : ELWD_Starting_Stage_I(0,queue){}
 
   DummyT* get_input() final{
     return nullptr;
@@ -44,9 +44,9 @@ struct producer : public ELWD_Starting_Stage_I<int, int>{
 struct consumer : public ELWD_Ending_Stage_I<int, int>{
   size_t fID;
 
-  consumer(size_t id, ELWD_Safe_Queue<int>* queue) : ELWD_Input_Stage_I(0,queue),fID(id){}
+  consumer(size_t id, ELWD_Safe_Queue<int>* queue) : ELWD_Ending_Stage_I(0,queue),fID(id){}
 
-  consumer(const consumer& cons) : ELWD_Input_Stage_I<int, int>(cons){}
+  consumer(const consumer& cons) : ELWD_Ending_Stage_I<int, int>(cons){}
 
   int* get_input() final{
     return new int(fInputQ->poll_and_pinch());

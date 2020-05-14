@@ -17,8 +17,8 @@
 #include <iostream>
 
 // This is a super simple dispatcher
-struct counter : public ELWD_Input_Stage_I<DummyT, int>{
-  counter(ELWD_Clock_Generator* clock):ELWD_Input_Stage_I(0, clock){};
+struct counter : public ELWD_Ending_Stage_I<DummyT, int>{
+  counter(ELWD_Clock_Generator* clock):ELWD_Ending_Stage_I(0, clock){};
 
   DummyT* get_input() final{
     fInputQ->poll_and_pinch();

@@ -77,7 +77,7 @@ int main(){
     pipeline | prod | cons;
 
     pipeline.start();
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    std::this_thread::sleep_for(std::chrono::seconds(100));
     pipeline.stop();
 
     pipeline.printStats();

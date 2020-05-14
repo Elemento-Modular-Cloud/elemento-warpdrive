@@ -13,7 +13,7 @@
 #include <iostream>
 #include "ELWD_Pipeline.h"
 #include "ELWD_Starting_Stage_I.h"
-#include "ELWD_Starting_Stage_I.h"
+#include "ELWD_Middle_Stage_I.h"
 #include "ELWD_Ending_Stage_I.h"
 
 #include <ELWD_Dummy_Queue.h>
@@ -91,9 +91,9 @@ int main(){
 
     pipeline | prod | cons | dis;
 
-//    pipeline.start();
+    pipeline.start();
     std::this_thread::sleep_for(std::chrono::seconds(1));
-//    pipeline.stop();
+    pipeline.stop();
 
     pipeline.printStats();
   }
