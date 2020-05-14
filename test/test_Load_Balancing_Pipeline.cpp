@@ -21,7 +21,7 @@
 
 #include <ELWD_Safe_Queue.h>
 
-// This is a super simple catcher
+// This is an rng packed in a stage
 struct producer : public ELWD_Starting_Stage_I<int, int>{
   producer(ELWD_Safe_Queue<int>* queue) : ELWD_Starting_Stage_I(0,queue){}
 
@@ -36,7 +36,7 @@ struct producer : public ELWD_Starting_Stage_I<int, int>{
   }
 };
 
-// This is a super simple encoder
+// This is a stage which dumps every input emptying the queue
 struct consumer : public ELWD_Ending_Stage_I<int, int>{
   size_t fID;
 
@@ -55,6 +55,7 @@ struct consumer : public ELWD_Ending_Stage_I<int, int>{
 };
 
 // This is an example of pipeline allocation using the previously defined simple processes.
+// A thread pool of consumers is created, using an automatically load balanced queue with a 1 hertz-clocked controller.
 int main(){
 
   auto queue = new ELWD_Safe_Queue<int>();
@@ -70,7 +71,7 @@ int main(){
     pipeline.start();
     for (int j = 0; j < 10; ++j) {
       std::this_thread::sleep_for(std::chrono::seconds(1));
-      std::cout << queue->size() << std::endl;
+      std::cout << "Queue size: " << queue->size() << std::endl;
     }
 
     pipeline.stop();

@@ -20,38 +20,35 @@
 
 #include <ELWD_Safe_Queue.h>
 
-// This is a super simple catcher
+// This is a random number generator
 struct producer : public ELWD_Starting_Stage_I<int, int>{
   producer(ELWD_Safe_Queue<int>* queue) : ELWD_Starting_Stage_I(0,queue){}
 
   int* process_input(DummyT* input) final{
     std::this_thread::sleep_for(std::chrono::microseconds(1000000/10));
     auto output = new int(rand() % 100);
-    std::cout << "catch: returning " << *output << "\n";
+    std::cout << "prod: returning " << *output << "\n";
     return output;
   }
 
   void handle_output(int* output) final{
-//    std::cout << "catch: returned " << *output << "\n";
     fOutputQ->append(*output);
-//    fOutputQ->append(*output-100);
   }
 };
 
-// This is a super simple encoder
+// This is a stage able to compute squares, but it contains a 1s sleep to sloooooow down things!
 struct consumer : public ELWD_Ending_Stage_I<int, int>{
   size_t fID;
 
   consumer(size_t id, ELWD_Safe_Queue<int>* queue) : ELWD_Ending_Stage_I(0,queue),fID(id){}
 
   int* get_input() final{
-//    std::cout << "enc: getting input: " << *input << "\n";
     return new int(fInputQ->poll_and_pinch());
   }
 
   DummyT* process_input(int* input) final{
     sleep(1);
-    std::cout << "enc" << fID << ": value = " << *input << " square = " << (*input)*(*input) << "\n";
+    std::cout << "cons" << fID << ": value = " << *input << " square = " << (*input)*(*input) << "\n";
     return nullptr;
   }
 };

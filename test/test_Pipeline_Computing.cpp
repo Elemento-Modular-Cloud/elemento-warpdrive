@@ -20,7 +20,7 @@
 
 #include <ELWD_Safe_Queue.h>
 
-// This is a random number generator
+// This is a random number generator which appends N and N-100 to the output queue
 struct producer : public ELWD_Starting_Stage_I<int, int>{
   producer(ELWD_Safe_Queue<int>* queue) : ELWD_Starting_Stage_I(0,queue){}
 
@@ -32,24 +32,23 @@ struct producer : public ELWD_Starting_Stage_I<int, int>{
   }
 
   void handle_output(int* output) final{
-//    std::cout << "catch: returned " << *output << "\n";
+    std::cout << "prod: generated " << *output << "\n";
     fOutputQ->append(*output);
     fOutputQ->append(*output-100);
   }
 };
 
-// This is stage able to compute squares
+// This is a stage able to compute squares
 struct consumer : public ELWD_Ending_Stage_I<int, int>{
   consumer(ELWD_Safe_Queue<int>* queue) : ELWD_Ending_Stage_I(0,queue){}
 
   int* get_input() final{
     auto input = new int(fInputQ->poll_and_pinch());
-//    std::cout << "enc: getting input: " << *input << "\n";
     return input;
   }
 
   DummyT* process_input(int* input) final{
-    std::cout << "enc: value = " << *input << " square = " << (*input)*(*input) << "\n";
+    std::cout << "cons: value = " << *input << " square = " << (*input)*(*input) << "\n";
     return nullptr;
   }
 };

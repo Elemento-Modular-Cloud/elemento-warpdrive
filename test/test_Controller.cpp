@@ -13,6 +13,8 @@
 #include <ELWD_Controller.h>
 #include <ELWD_Pipeline.h>
 
+// This is a ELWD controller, a self-clocked stage able to perform the algorithm defined in controller_logic each time.
+// This can be useful for monitoring of other threads!
 struct testController : public ELWD_Controller{
   testController(size_t hertz):
   ELWD_Controller(hertz){}
@@ -35,7 +37,7 @@ int main(){
     pipeline | controller;
 
     pipeline.start();
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     pipeline.stop();
 
     pipeline.printStats();

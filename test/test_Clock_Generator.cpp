@@ -16,7 +16,7 @@
 
 #include <iostream>
 
-// This is a super simple dispatcher
+// This is a super simple stage meant to be fed by a clock generator (which is simply a temporized dummy queue!)
 struct counter : public ELWD_Ending_Stage_I<DummyT, int>{
   counter(ELWD_Clock_Generator* clock):ELWD_Ending_Stage_I(0, clock){};
 
@@ -26,7 +26,14 @@ struct counter : public ELWD_Ending_Stage_I<DummyT, int>{
   }
 
   DummyT* process_input(DummyT* input) final{
-    std::cout << "tik tok..." << "\n";
+    fParams++;
+
+    if (fParams % 2 == 1) {
+      std::cout << "tik..." << "\n";
+    } else {
+      std::cout << "tok..." << "\n";
+    }
+
     return nullptr;
   }
 };
