@@ -34,6 +34,10 @@ struct ELWD_Starting_Stage_I : public ELWD_Output_Thread{
 
   ELWD_Starting_Stage_I():
   ELWD_Output_Thread(){}
+
+  DummyT* get_input() final{
+    return nullptr;
+  }
 };
 
 #endif //ELEMENTO_ELWD_STARTING_STAGE_I_H

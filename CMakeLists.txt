@@ -60,6 +60,13 @@ target_link_libraries(test_Pipeline_Allocation elemento_warpdrive)
 target_include_directories(test_Pipeline_Allocation PUBLIC include src test)
 
 add_executable(
+        test_Pipeline_Declaration
+        test/test_Pipeline_Declaration.cpp
+)
+target_link_libraries(test_Pipeline_Declaration elemento_warpdrive)
+target_include_directories(test_Pipeline_Declaration PUBLIC include src test)
+
+add_executable(
         test_Pipeline_Computing
         test/test_Pipeline_Computing.cpp
 )

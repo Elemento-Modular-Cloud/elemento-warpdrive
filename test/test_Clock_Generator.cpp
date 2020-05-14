@@ -26,11 +26,8 @@ struct counter : public ELWD_Ending_Stage_I<DummyT, int>{
   }
 
   DummyT* process_input(DummyT* input) final{
+    std::cout << "tik tok..." << "\n";
     return nullptr;
-  }
-
-  void handle_output(DummyT* output) final{
-    std::cout << "dis: returned " << output << "\n";
   }
 };
 

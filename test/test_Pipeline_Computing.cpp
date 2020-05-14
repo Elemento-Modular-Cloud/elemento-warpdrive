@@ -20,14 +20,9 @@
 
 #include <ELWD_Safe_Queue.h>
 
-// This is a super simple catcher
+// This is a random number generator
 struct producer : public ELWD_Starting_Stage_I<int, int>{
   producer(ELWD_Safe_Queue<int>* queue) : ELWD_Starting_Stage_I(0,queue){}
-
-  DummyT* get_input() final{
-//    std::cout << "catch: getting no input\n";
-    return nullptr;
-  }
 
   int* process_input(DummyT* input) final{
     std::this_thread::sleep_for(std::chrono::microseconds(1000000/60));
@@ -43,7 +38,7 @@ struct producer : public ELWD_Starting_Stage_I<int, int>{
   }
 };
 
-// This is a super simple encoder
+// This is stage able to compute squares
 struct consumer : public ELWD_Ending_Stage_I<int, int>{
   consumer(ELWD_Safe_Queue<int>* queue) : ELWD_Ending_Stage_I(0,queue){}
 
@@ -56,10 +51,6 @@ struct consumer : public ELWD_Ending_Stage_I<int, int>{
   DummyT* process_input(int* input) final{
     std::cout << "enc: value = " << *input << " square = " << (*input)*(*input) << "\n";
     return nullptr;
-  }
-
-  void handle_output(DummyT* output) final{
-//    std::cout << "enc: done\n";
   }
 };
 

@@ -25,10 +25,6 @@
 struct producer : public ELWD_Starting_Stage_I<int, int>{
   producer(ELWD_Safe_Queue<int>* queue) : ELWD_Starting_Stage_I(0,queue){}
 
-  DummyT* get_input() final{
-    return nullptr;
-  }
-
   int* process_input(DummyT* input) final{
     std::this_thread::sleep_for(std::chrono::microseconds(1000000/1));
     auto output = new int(rand() % 100);
@@ -55,9 +51,6 @@ struct consumer : public ELWD_Ending_Stage_I<int, int>{
   DummyT* process_input(int* input) final{
     sleep(1);
     return nullptr;
-  }
-
-  void handle_output(DummyT* output) final{
   }
 };
 

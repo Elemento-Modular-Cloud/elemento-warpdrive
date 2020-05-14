@@ -34,6 +34,8 @@ struct ELWD_Ending_Stage_I : public ELWD_Input_Thread{
 
   ELWD_Ending_Stage_I(const ELWD_Ending_Stage_I& disp):
   ELWD_Input_Thread(disp){}
+
+  void handle_output(DummyT* output) final{}
 };
 
 #endif //ELEMENTO_ELWD_ENDING_STAGE_I_H

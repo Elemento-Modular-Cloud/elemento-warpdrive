@@ -12,25 +12,24 @@
 
 #include <iostream>
 #include "ELWD_Pipeline.h"
-#include "ELWD_Starting_Stage_I.h"
 #include "ELWD_Middle_Stage_I.h"
-#include "ELWD_Ending_Stage_I.h"
 
-#include <ELWD_Dummy_Queue.h>
+// This is a super simple stage which keeps writing on the terminal the value passed to the ctor.
+// The passed value is stored in the form of the "param" internal state of a ELWD_Stage.
+struct stupidStage : public ELWD_Middle_Stage_I<int, int, int>{
 
-// This is a super simple producer
-struct producer : public ELWD_Starting_Stage_I<int, int>{
-  producer():ELWD_Starting_Stage_I(){};
+  stupidStage(int value):ELWD_Middle_Stage_I(value){
+  };
 
-  DummyT* get_input() final{
+  int* get_input() final{
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     std::cout << "catch: getting no input\n";
     return nullptr;
   }
 
-  int* process_input(DummyT* input) final{
-    std::cout << "catch: returning 10\n";
-    return new int(10);
+  int* process_input(int* input) final{
+    std::cout << "catch: returning " << this->fParams << "\n";
+    return &this->fParams;
   }
 
   void handle_output(int* output) final{
@@ -38,61 +37,20 @@ struct producer : public ELWD_Starting_Stage_I<int, int>{
   }
 };
 
-// This is a super simple consumer
-struct consumer : public ELWD_Middle_Stage_I<int, int, int>{
-  consumer():ELWD_Middle_Stage_I(){};
-
-  int* get_input() final{
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    std::cout << "enc: getting 11 as input\n";
-    return new int(11);
-  }
-
-  int* process_input(int* input) final{
-    std::cout << "enc: returning 11\n";
-    return input;
-  }
-
-  void handle_output(int* output) final{
-    std::cout << "enc: returned " << *output << "\n";
-  }
-};
-
-// This is a super simple dispatcher
-struct dispatcher : public ELWD_Ending_Stage_I<int, int>{
-  dispatcher():ELWD_Ending_Stage_I(){};
-
-  int* get_input() final{
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    std::cout << "dis: getting 12 as input\n";
-    return new int(12);
-  }
-
-  DummyT* process_input(int* input) final{
-    std::cout << "dis: returning " << *input << "\n";
-    return nullptr;
-  }
-
-  void handle_output(DummyT* output) final{
-    std::cout << "dis: returned " << output << "\n";
-  }
-};
-
-
 // This is an example of pipeline allocation using the previously defined simple processes.
 int main(){
 
-  auto prod = producer();
-  auto cons = consumer();
-  auto dis = dispatcher();
+  auto stage1 = stupidStage(10);
+  auto stage2 = stupidStage(11);
+  auto stage3 = stupidStage(12);
 
   {
     ELWD_Pipeline pipeline;
 
-    pipeline | prod | cons | dis;
+    pipeline | stage1 | stage2 | stage3;
 
     pipeline.start();
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(10));
     pipeline.stop();
 
     pipeline.printStats();
