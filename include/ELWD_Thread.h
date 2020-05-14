@@ -64,8 +64,10 @@ struct ELWD_Thread : public ELWD_Thread_I, public ELWD_Stage<InputT,OutputT,Para
 
   void stop() override {
     if(fEmptyOnStop) {
-      while (!this->fInputQ->empty()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      if (this->fInputQ) {
+        while (!this->fInputQ->empty()) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
       }
     }
     this->fKeepRunning = false;

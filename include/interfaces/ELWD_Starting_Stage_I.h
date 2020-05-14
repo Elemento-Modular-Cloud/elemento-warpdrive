@@ -25,7 +25,9 @@
 template <class OutputT, class ParamT, class ELWD_Output_Thread = ELWD_Thread<DummyT,OutputT,ParamT>>
 struct ELWD_Starting_Stage_I : public ELWD_Output_Thread{
   ELWD_Starting_Stage_I(ParamT params, ELWD_Safe_Queue<OutputT>* outputQ):
-  ELWD_Output_Thread(params, new ELWD_Dummy_Queue(), outputQ){}
+  ELWD_Output_Thread(params, new ELWD_Dummy_Queue(), outputQ){
+      this->fEmptyOnStop = false;
+  }
 
   ELWD_Starting_Stage_I(ParamT params):
   ELWD_Output_Thread(params){}
