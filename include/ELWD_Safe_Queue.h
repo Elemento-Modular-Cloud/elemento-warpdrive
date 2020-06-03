@@ -17,7 +17,6 @@
 
 #include <queue>
 #include <mutex>
-#include <boost/circular_buffer.hpp>
 
 
 // Thread safe FIFO Implementation with sleep-less polling and wait semantics.
