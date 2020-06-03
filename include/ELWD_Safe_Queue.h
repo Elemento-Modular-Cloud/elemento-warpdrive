@@ -17,7 +17,7 @@
 
 #include <queue>
 #include <mutex>
-
+#include <condition_variable>
 
 // Thread safe FIFO Implementation with sleep-less polling and wait semantics.
 
