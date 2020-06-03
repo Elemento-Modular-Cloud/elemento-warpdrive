@@ -62,6 +62,7 @@ int main(){
 
   auto prod = producer(queue);
   auto consumers = ELWD_Load_Balanced_Thread_Pool(consumer(1, queue), 1);
+  consumers.fDebug = true;
 
   {
     ELWD_Pipeline pipeline;

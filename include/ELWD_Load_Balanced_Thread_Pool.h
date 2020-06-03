@@ -27,6 +27,7 @@
 struct Load_Balancer : public ELWD_Controller{
   ELWD_Sizeable* fQueue;
   ELWD_Pipeline* fPipeline;
+  bool fDebug = false;
 
   Load_Balancer(size_t hertz, ELWD_Sizeable* queue, ELWD_Pipeline* pipeline):
   fQueue(queue),
@@ -34,17 +35,19 @@ struct Load_Balancer : public ELWD_Controller{
   ELWD_Controller(hertz){}
 
   void controller_logic() final {
-    std::cout << "### HERE COMES THE LOAD BALANCER ###\n";
-    std::cout << "Queue size " << fQueue->size() << std::endl;
-    std::cout << "Threads number " << fPipeline->fThreads.size() << std::endl;
-    std::cout << "Running threads " << fPipeline->runningThreads() << std::endl;
-    std::cout << "Stopped threads " << fPipeline->stoppedThreads() << std::endl;
+    if(fDebug) {
+      std::cout << "### HERE COMES THE LOAD BALANCER ###\n";
+      std::cout << "Queue size " << fQueue->size() << std::endl;
+      std::cout << "Threads number " << fPipeline->fThreads.size() << std::endl;
+      std::cout << "Running threads " << fPipeline->runningThreads() << std::endl;
+      std::cout << "Stopped threads " << fPipeline->stoppedThreads() << std::endl;
+    }
 
     if (fQueue->size() >= fPipeline->countThreads(ELWD_Thread_State::kRunning)){
       if (not fPipeline->allRunning()){
         for(auto const& thread : fPipeline->fThreads){
           if(thread->fState == ELWD_Thread_State::kStopped){
-            std::cout << "starting thread\n";
+            if(fDebug) std::cout << "starting thread\n";
             thread->start();
             break;
           }
@@ -53,7 +56,7 @@ struct Load_Balancer : public ELWD_Controller{
     } else {
       for(auto& thread : fPipeline->fThreads){
         if(thread->fState == ELWD_Thread_State::kRunning) {
-          std::cout << "stopping thread\n";
+          if(fDebug) std::cout << "stopping thread\n";
           thread->fEmptyOnStop = false;
           thread->stop();
           thread->fEmptyOnStop = true;
@@ -61,7 +64,7 @@ struct Load_Balancer : public ELWD_Controller{
         }
       }
     }
-    std::cout << "### HERE GOES THE LOAD BALANCER ###\n";
+    if(fDebug) std::cout << "### HERE GOES THE LOAD BALANCER ###\n";
   }
 
   void printStats() final{
